@@ -1,19 +1,12 @@
-"use client";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../lib/auth";
+import { redirect } from "next/navigation";
 
-import { signIn, signOut, useSession } from "next-auth/react";
-import { useBalance } from "@repo/store/useBalance";
-import { Appbar } from "@repo/ui/appbar";
-
-export default function Page(): JSX.Element {
-  const session = useSession();
-  const balance = useBalance();
-  return (
-    <div className="text-3xl">
-      <Appbar onSignin={signIn} onSignout={signOut} user={session.data?.user} />
-      Hi there, you are in client app
-      <br/>
-      
-      <h2>Your balance is: {balance}</h2>
-    </div>
-  );
+export default async function Page() {
+  const session = await getServerSession(authOptions);
+  
+  if(session?.user)
+    redirect("/dashboard");
+  else
+    redirect("/api/auth/signin");
 }
