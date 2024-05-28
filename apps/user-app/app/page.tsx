@@ -1,18 +1,18 @@
 "use client";
 
-import { Button } from "@repo/ui/button";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { useBalance } from "@repo/store/useBalance";
+import { Appbar } from "@repo/ui/appbar";
 
 export default function Page(): JSX.Element {
-  
+  const session = useSession();
   const balance = useBalance();
   return (
     <div className="text-3xl">
-      Hi there
+      <Appbar onSignin={signIn} onSignout={signOut} user={session.data?.user} />
+      Hi there, you are in client app
       <br/>
-      <Button appName="Click Me" className="bg-blue-300 rounded-md text-gray-900">
-        I am here
-      </Button>
+      
       <h2>Your balance is: {balance}</h2>
     </div>
   );
