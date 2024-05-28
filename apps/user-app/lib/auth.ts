@@ -1,8 +1,6 @@
-import { PrismaClient } from "@repo/db/client";
+import db from "@repo/db/client";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
-
-const db = new PrismaClient();
 
 export const authOptions = {
   providers: [
@@ -18,7 +16,7 @@ export const authOptions = {
         const hashedPassword = await bcrypt.hash(credentials.password, 10);
         const existingUser = await db.user.findFirst({
           where: {
-            number: credentials.phone
+            mobileNumber: credentials.phone
           }
         });
 
@@ -37,7 +35,7 @@ export const authOptions = {
         try {
           const user = await db.user.create({
             data: {
-              number: credentials.phone,
+              mobileNumber: credentials.phone,
               password: hashedPassword
             }
           });
@@ -45,7 +43,7 @@ export const authOptions = {
           return {
             id: user.id.toString(),
             name: user.name,
-            number: user.number
+            mobileNumber: user.mobileNumber
           }
         } catch (e) {
           console.log('ERROR when CREATING THE USER: ', e);
